@@ -21,6 +21,12 @@
         .background-layer {
             background-image: url(https://prod-alicdn-community.kurobbs.com/forum/ae40fc71bdc54074ac73b4187d02aebd20260206.jpg);
         }
+        /* 用于在内容中插入可调节高度的空白 */
+        .spacer {
+            height: 1rem; /* 可调整为 1rem/8px/16px 等，根据需要增大或缩小 */
+            display: block;
+            width: 100%;
+        }
     </style>
     <script>
         // 在这里自定义头像图片
@@ -29,7 +35,7 @@
         };
     </script>
 </head>
-<body class="dark-mode">
+<body class="light-mode">
     <div class="background-layer"></div>
     <div class="background-overlay"></div>
     <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
@@ -56,8 +62,14 @@
         <section class="card announcement">
             <div class="card-icon"><i data-lucide="megaphone"></i></div>
             <div class="announcement-content">
-                <h3>📢 最新公告</h3>
-                <p>飞行雪绒 巴拉巴拉。</p>
+                <h3>📢 公告</h3>
+                <p>这里是 WuwaFrontEnd 的模板预览页。</p>
+                <p>这里是 bot 介绍页的主页，可以用这个模板为你的 bot 进行介绍，以招徕顾客。</p>
+                <p>XutheringWavesUID 的登录模板页 和 云游戏登录获取抽卡链接的模板页，</p>
+                <p>请点击以下按钮跳转预览: </p>
+                <br>
+                <a href="Example/XwUID_login_example/index.html" class="btn btn-primary">XwUID 登录模板</a>
+                <a href="Example/Gacha_login_example/index.html" class="btn btn-primary">云游戏登录模板</a>
             </div>
         </section>
 
@@ -65,7 +77,7 @@
         <section id="about" class="intro-grid">
             <div class="card">
                 <h3>🌿 关于飞行雪绒</h3>
-                <p>飞行雪绒是一款专为《鸣潮》玩家打造的综合功能机器人。核心查询能力基于 <a href="https://github.com/Loping151/XutheringWavesUID" target="_blank" class="link-highlight">XutheringWavesUID</a> 库与 GSUID Core 框架，提供极速的数据查询与精美的图片生成。特别感谢作者 Loping151 提供的技术支持。</p>
+                <p>飞行雪绒是一款专为《鸣潮》玩家打造的综合功能机器人。核心查询能力基于 <a href="https://github.com/Loping151/XutheringWavesUID" target="_blank" class="link-highlight">XutheringWavesUID</a> 库与                 <a href="https://github.com/Genshin-bots/gsuid_core" target="_blank" class="link-highlight">GSUID Core</a> 框架，提供声骸数据查询、角色面板评分与图片生成。</p>
             </div>
             <div class="card">
                 <h3>🛡️ 服务条例</h3>
@@ -82,6 +94,7 @@
         <section id="features" class="card features-section">
             <h2 class="section-title">✨ 核心功能</h2>
             <div class="features-grid">
+                <!-- 这里放你的 bot 的功能介绍。增减功能直接增删 div 模块即可。 -->
                 <div class="card">
                     <div class="feature-icon"><i data-lucide="search"></i></div>
                     <h4>鸣潮查询</h4>
@@ -127,6 +140,7 @@
                 <div class="method">
                     <strong>扫码添加</strong>
                     <div class="qr-placeholder">
+                        <!-- 这里放你的 bot 的二维码图片，或者直接放一个引导用户添加的图片也行。 -->
                         <img src="assets/loveu.jpg" alt="QR Code" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                 </div>
@@ -150,8 +164,9 @@
                 <i data-lucide="cat" style="width: 22px; height: 22px;"></i>
             </div>
             <div class="donation-teaser-body">
+                <!-- 这里放赞助页面。 -->
                 <a href="catfood.html" class="donation-link">
-                    <h3>🐱 投喂猫粮</h3>
+                    <h3>投喂猫粮</h3>
                     <i data-lucide="chevron-right" style="width: 16px;"></i>
                 </a>
                 <p>支持服务器运行，让飞行雪绒陪伴更久 ~</p>
@@ -160,10 +175,11 @@
 
         <!-- Footer -->
         <footer class="card footer">
-            <p>&copy; 2026 飞行雪绒 Project. Special thanks back to <strong>Loping151</strong>.</p>
+            <p>&copy; 2026 飞行雪绒 Project.</p>
             <div class="footer-links">
                 <a href="https://github.com/Loping151/XutheringWavesUID" target="_blank">XutheringWavesUID</a>
                 <a href="https://github.com/Genshin-bots/gsuid_core" target="_blank">GSUID Core</a>
+                <a href="https://github.com/jiang068/WuwaFrontEnd" target="_blank">WuwaFrontEnd 模板</a>
             </div>
         </footer>
     </main>
