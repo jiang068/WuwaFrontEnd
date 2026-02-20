@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投喂猫粮 - 飞行雪绒</title>
+    <link rel="icon" href="https://web-static.kurobbs.com/resource/prod/icon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* 在这里自定义主题色 */
+        :root {
+            --theme-light: #FFB6C1; /* 主题浅色 (淡粉) */
+            --theme-dark: #DB7093; /* 主题深色 (苍紫罗兰红) */
+            --theme-text: #6D435A; /* 主题文字颜色 (深粉灰) */
+            --theme-gold: #FFDAB9; /* 金色点缀 (桃杏色) */
+        }
+
+        /* 在这里自定义背景图片 */
+        .background-layer {
+            background-image: url(https://prod-alicdn-community.kurobbs.com/forum/ae40fc71bdc54074ac73b4187d02aebd20260206.jpg);
+        }
+    </style>
+    <script>
+        // 在这里自定义头像图片
+        window.APP_CONFIG = {
+            bannerImageUrl: 'https://i0.hdslb.com/bfs/face/3e0e929e4b3d6f32c553e4a7f52f975bd9a2d939.jpg@128w_128h_1c_1s.webp'
+        };
+    </script>
+</head>
+<body class="dark-mode">
+    <button id="theme-toggle" class="theme-toggle" aria-label="切换主题">
+        <i data-lucide="sun" class="sun-icon"></i>
+        <i data-lucide="moon" class="moon-icon"></i>
+    </button>
+    <div class="background-layer"></div>
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <header class="card hero">
+            <div class="avatar-container">
+                <img id="app-avatar" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=XiaoAi" alt="飞行雪绒" class="avatar">
+                <div class="status-online"></div>
+            </div>
+            <h1>投喂猫粮</h1>
+            <p class="tagline">感谢你对飞行雪绒的支持，你的每一份投喂都将用于服务器的日常开销与更好的维护。</p>
+            <div class="hero-actions">
+                <a href="index.html" class="btn btn-primary">返回首页</a>
+            </div>
+        </header>
+
+        <section class="card announcement">
+            <div class="card-icon"><i data-lucide="heart"></i></div>
+            <div class="announcement-content">
+                <h3>为什么需要投喂？</h3>
+                <p>服务器有成本，代理池要买，维护需要精力。</p>
+            </div>
+        </section>
+
+        <div class="grid-cols">
+            <!-- <div class="card qr-card text-center">
+                <i data-lucide="badge-dollar-sign" style="color: #ff9f43; width: 32px; height: 32px;"></i>
+                <h3>支付宝</h3>
+                <div class="qr-image">
+                    <img src="assets/loveu.jpg" alt="Alipay QR" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </div>
+                <p class="qr-msg">感谢投喂喵 ~</p>
+            </div> -->
+
+            <div class="card qr-card text-center">
+                <i data-lucide="message-circle" style="color: #07c160; width: 32px; height: 32px;"></i>
+                <h3>微信支付</h3>
+                <div class="qr-image">
+                    <img src="assets/loveu.jpg" alt="Wechat QR" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </div>
+                <p class="qr-msg">么么哒 ~</p>
+            </div>
+
+            <div class="card qr-card text-center">
+                <i data-lucide="smartphone" style="color: #1296db; width: 32px; height: 32px;"></i>
+                <h3>QQ 支付</h3>
+                <div class="qr-image">
+                    <img src="assets/loveu.jpg" alt="QQ QR" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                </div>
+                <p class="qr-msg">爱你哦 ~</p>
+            </div>
+        </div>
+
+        <section class="card">
+            <h3>🐾 投喂说明</h3>
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6; border-left: 4px solid var(--primary-color);">
+                <p>飞行雪绒是一个纯公益项目，完全免费。打赏仅用于服务器电费与日常维护开销，心意领了就好，<strong>请不要打赏太多喵~</strong></p>
+            </div>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <i data-lucide="info" style="width: 18px; height: 18px; color: var(--primary-color); flex-shrink: 0;"></i>
+                    <span>所有款项将优先用于支付服务器账单和 AI 模型 API 费用。</span>
+                </li>
+                <li style="margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <i data-lucide="users" style="width: 18px; height: 18px; color: var(--primary-color); flex-shrink: 0;"></i>
+                    <span>如投喂金额超过 10 元，可添加开发者好友或进入特殊感谢名单。</span>
+                </li>
+                <li style="margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <i data-lucide="shield-check" style="width: 18px; height: 18px; color: var(--primary-color); flex-shrink: 0;"></i>
+                    <span>请量力而行，未成年人请勿投喂。</span>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="card footer">
+            <p>&copy; 2026 飞行雪绒 Project. Special thanks back to <strong>Loping151</strong>.</p>
+            <div class="footer-links">
+                <a href="https://github.com/Loping151/XutheringWavesUID" target="_blank">XutheringWavesUID</a>
+                <a href="https://github.com/Genshin-bots/gsuid_core" target="_blank">GSUID Core</a>
+            </div>
+        </footer>
+    </main>
+
+    <script src="js/script.js"></script>
+    <script>
+        // 初始化 Lucide 图标
+        lucide.createIcons();
+    </script>
+</body>
+</html>

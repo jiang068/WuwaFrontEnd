@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飞行雪绒 - 库街区代理登录</title>
+  <link rel="icon" href="https://web-static.kurobbs.com/resource/prod/icon.ico" type="image/x-icon">
+  <script src="https://static.geetest.com/v4/gt4.js"></script>
+  <script src="https://apps.bdimg.com/libs/jquery/1.6.4/jquery.min.js"></script>
+  <style>
+      /* 在这里自定义主题色 */
+      :root {
+          --theme-light: #FFB6C1; /* 主题浅色 (淡粉) */
+          --theme-dark: #DB7093; /* 主题深色 (苍紫罗兰红) */
+          --theme-text: #6D435A; /* 主题文字颜色 (深粉灰) */
+          --theme-gold: #FFDAB9; /* 金色点缀 (桃杏色) */
+      }
+
+      /* 在这里自定义背景图片 */
+      .background-layer {
+          background-image: url(https://prod-alicdn-community.kurobbs.com/forum/ae40fc71bdc54074ac73b4187d02aebd20260206.jpg);
+      }
+  </style>
+  <script>
+      // 在这里自定义头像图片
+      window.APP_CONFIG = {
+          bannerImageUrl: 'https://i0.hdslb.com/bfs/face/3e0e929e4b3d6f32c553e4a7f52f975bd9a2d939.jpg@128w_128h_1c_1s.webp'
+      };
+
+      // 在这里自定义公告内容（如果不需要公告，将对应数组设为空 []）
+      window.NOTICE_CONFIG = {
+          beforeNotices: [
+              // 登录框前面的公告
+              {
+                  title: '📢 注意',
+                  text: '此处登录等效于库街区登录，会挤占手机上已经登录的库街区；如果手机再次登录库街区，会导致bot会话被挤下线。'
+              }
+          ],
+          afterNotices: [
+              // 登录框后面的公告
+              {
+                  title: '💡 解决方法',
+                  text: '如果想要bot和库街区登录共存，请参照移动端抓包登录教程：\n同时登录(库街区/其他Bot)方法'
+              }
+              // ,
+              // {
+              //     title: '🔔 公告',
+              //     text: '这是登录框后面的第二个公告'
+              // }
+          ]
+      };
+  </script>
+  <style>
+      :root {
+          --glass-bg: hsla(0, 0%, 100%, .85);
+      }
+
+      body,
+      html {
+          font-family: Microsoft YaHei, -apple-system, BlinkMacSystemFont, sans-serif;
+          height: 100%;
+          margin: 0;
+          overflow: hidden;
+          padding: 0;
+      }
+
+      body {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          position: relative;
+      }
+
+      /* 静态背景 */
+      .background-layer {
+          background-position: 50%;
+          background-repeat: no-repeat;
+          background-size: cover;
+          transform: scale(1.05);
+          z-index: -10;
+      }
+
+      .background-layer,
+      .background-overlay {
+          height: 100%;
+          left: 0;
+          position: fixed;
+          top: 0;
+          width: 100%;
+      }
+
+      .background-overlay {
+          background: linear-gradient(180deg, rgba(255, 248, 220, .12), rgba(144, 238, 144, .06) 50%, rgba(34, 139, 34, .1));
+          z-index: -9;
+      }
+
+      /* 主容器 */
+      .main-container {
+          align-items: center;
+          box-sizing: border-box;
+          display: flex;
+          gap: 20px;
+          height: 100vh;
+          justify-content: center;
+          padding: 20px;
+          position: relative;
+          z-index: 10;
+      }
+
+      .left-panel {
+          display: flex;
+          flex-direction: column;
+          flex-shrink: 0;
+          gap: 20px;
+          margin: 0;
+          max-width: 500px;
+          transition: none;
+          width: auto;
+      }
+
+      /* 登录框 */
+      .login-container {
+          animation: floatContainer 6s ease-in-out infinite;
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+          background-color: var(--glass-bg);
+          border-radius: 24px;
+          box-shadow: 0 20px 50px rgba(20, 60, 40, .2), inset 0 0 0 1px #fff, 0 0 60px rgb(from var(--theme-light) r g b / 0.1);
+          max-width: 380px;
+          padding: 2rem;
+          position: relative;
+          transition: none;
+          width: 88%;
+      }
+
+      .login-container:before {
+          animation: borderGlow 4s ease-in-out infinite;
+          background: linear-gradient(135deg, rgb(from var(--theme-gold) r g b / 0.25), rgb(from var(--theme-light) r g b / 0.15) 50%, rgb(from var(--theme-light) r g b / 0.25));
+          border-radius: 26px;
+          bottom: -2px;
+          content: "";
+          left: -2px;
+          opacity: .5;
+          position: absolute;
+          right: -2px;
+          top: -2px;
+          z-index: -1;
+      }
+
+      @keyframes borderGlow {
+          0%, to { opacity: .3; }
+          50% { opacity: .6; }
+      }
+
+      @keyframes floatContainer {
+          0%, to { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+      }
+
+      .login-container:hover {
+          animation-play-state: paused;
+      }
+
+      .login-header {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1.5rem;
+      }
+
+      .banner {
+          border: 3px solid #fff;
+          border-radius: 50%;
+          box-shadow: 0 4px 12px rgb(from var(--theme-dark) r g b / 0.3);
+          flex-shrink: 0;
+          height: 72px;
+          overflow: hidden;
+          position: relative;
+          width: 72px;
+      }
+
+      .banner:after {
+          animation: spinRing 25s linear infinite;
+          border: 2px dashed var(--theme-gold);
+          border-radius: 50%;
+          bottom: -3px;
+          content: "";
+          left: -3px;
+          position: absolute;
+          right: -3px;
+          top: -3px;
+      }
+
+      @keyframes spinRing {
+          to { transform: rotate(1turn); }
+      }
+
+      .banner img {
+          height: 100%;
+          object-fit: cover;
+          width: 100%;
+      }
+
+      .banner-text {
+          flex: 1;
+          margin-left: 5px;
+          padding-right: 12px;
+      }
+
+      .welcome-text {
+          color: var(--theme-dark);
+          font-size: 1.5rem;
+          font-weight: 800;
+          letter-spacing: .5px;
+          margin-bottom: 2px;
+      }
+
+      .logo-text {
+          color: var(--theme-text);
+          font-size: .95rem;
+          font-weight: 700;
+          opacity: .8;
+      }
+
+      .kurobbs-text {
+          color: var(--theme-text);
+          font-size: .75rem;
+          font-weight: 600;
+          margin-top: 4px;
+          opacity: 0.7;
+      }
+
+      .input-group {
+          margin-bottom: 1.25rem;
+      }
+
+      label {
+          color: var(--theme-text);
+          display: block;
+          font-size: .9rem;
+          font-weight: 700;
+          margin-bottom: .5rem;
+      }
+
+      input[type=tel],
+      input[type=text],
+      #verificationCode {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-color: hsla(0, 0%, 100%, .95);
+          border: 2px solid rgb(from var(--theme-light) r g b / 0.4);
+          border-radius: 12px;
+          box-sizing: border-box;
+          color: #333;
+          font-size: 16px;
+          padding: .85rem;
+          transition: all .3s;
+          width: 100%;
+      }
+
+      input:focus,
+      #verificationCode:focus {
+          border-color: var(--theme-dark);
+          box-shadow: 0 0 0 4px rgb(from var(--theme-light) r g b / 0.2);
+          outline: none;
+      }
+
+      .verification-group {
+          display: flex;
+          gap: .6rem;
+      }
+
+      #loginBtn {
+          animation: breathFlow 5s ease-in-out infinite;
+          background: linear-gradient(90deg, var(--theme-light), var(--theme-dark), var(--theme-gold), var(--theme-light));
+          background-size: 300% 100%;
+          border: none;
+          border-radius: 12px;
+          box-shadow: 0 8px 20px rgba(46, 139, 87, .25);
+          color: #fff;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: 700;
+          margin-top: 10px;
+          padding: .9rem;
+          width: 100%;
+      }
+
+      @keyframes breathFlow {
+          0% { background-position: 0 50%; }
+          50% { background-position: 100% 50%; }
+          to { background-position: 0 50%; }
+      }
+
+      #loginBtn:active {
+          transform: scale(.98);
+      }
+
+      #loginBtn:disabled {
+          animation: none;
+          background: #bdc3c7;
+          box-shadow: none;
+          cursor: not-allowed;
+      }
+
+      #getCodeBtn {
+          background: #fff;
+          border: 1px solid var(--theme-light);
+          border-radius: 12px;
+          color: var(--theme-dark);
+          cursor: pointer;
+          flex-shrink: 0;
+          font-weight: 700;
+          min-width: 120px;
+          padding: 0 1.2rem;
+          transition: .3s;
+          white-space: nowrap;
+          width: auto;
+      }
+
+      #getCodeBtn:hover:not(:disabled) {
+          background: var(--theme-light);
+          color: #fff;
+      }
+
+      #getCodeBtn:disabled {
+          background: #f5f5f5;
+          border-color: #e0e0e0;
+          color: #bdc3c7;
+          cursor: not-allowed;
+      }
+
+      .user-id-display {
+          text-align: center;
+          color: var(--theme-text);
+          font-size: 0.8em;
+          margin-bottom: 10px;
+          transition: opacity 0.3s ease;
+      }
+
+      .user-id-display:hover {
+          opacity: 1;
+      }
+
+      /* 模态框 */
+      .modal {
+          backdrop-filter: blur(5px);
+          background-color: rgba(0, 0, 0, .4);
+          display: none;
+          height: 100%;
+          left: 0;
+          opacity: 0;
+          position: fixed;
+          top: 0;
+          transition: opacity .3s ease;
+          width: 100%;
+          z-index: 2000;
+      }
+
+      .modal-content {
+          background-color: #fff;
+          border-radius: 20px;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, .2);
+          margin: 40vh auto;
+          max-width: 320px;
+          padding: 30px 20px;
+          text-align: center;
+          transform: scale(.8);
+          transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+          width: 80%;
+      }
+
+      .modal.show {
+          display: block;
+          opacity: 1;
+      }
+
+      .modal.show .modal-content {
+          opacity: 1;
+          transform: scale(1);
+      }
+
+      .close {
+          color: #aaa;
+          cursor: pointer;
+          float: right;
+          font-size: 28px;
+          font-weight: 700;
+          transition: color .3s ease;
+      }
+
+      .close:focus,
+      .close:hover {
+          color: #000;
+          text-decoration: none;
+      }
+
+      .countdown {
+          font-size: 0.9em;
+          color: #666;
+          margin-top: 10px;
+      }
+
+      .redirect-button {
+          margin-top: 15px;
+          padding: 10px 20px;
+          background: linear-gradient(90deg, var(--theme-light), var(--theme-dark));
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 600;
+      }
+
+      .redirect-button:hover {
+          background: linear-gradient(90deg, var(--theme-dark), var(--theme-gold));
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgb(from var(--theme-dark) r g b / 0.3);
+      }
+
+      /* 响应式 */
+      @media (max-width:768px) {
+          body {
+              align-items: flex-start;
+              overflow-y: auto;
+              padding: 20px 0;
+          }
+
+          .main-container {
+              align-items: center;
+              flex-direction: column;
+              height: auto;
+              justify-content: center;
+              min-height: 100vh;
+              padding: 20px;
+          }
+
+          .left-panel {
+              margin: 0 auto;
+              max-width: 500px;
+              min-width: auto;
+              order: 1;
+              width: 100%;
+          }
+
+          .login-container {
+              margin: 0 !important;
+              max-width: none !important;
+              min-width: auto !important;
+              padding: 1.5rem !important;
+              width: 100% !important;
+              box-sizing: border-box !important;
+          }
+      }
+  </style>
+</head>
+<body>
+<div class="background-layer"></div>
+<div class="background-overlay"></div>
+
+<div class="main-container no-accounts">
+    <div class="left-panel">
+        <div class="login-container">
+          <div class="login-header">
+            <div class="banner-text">
+              <div class="welcome-text">飞行雪绒</div>
+              <div class="logo-text">XutheringWavesUID</div>
+              <div class="kurobbs-text">库街区代理登录</div>
+            </div>
+            <div class="banner">
+              <img id="bannerImage" src="" alt="Banner">
+            </div>
+          </div>
+          <form id="loginForm">
+            <div class="input-group">
+              <label for="phone">手机号</label>
+              <input type="tel" id="phone" name="phone" required pattern="[0-9]{11}" placeholder="请输入11位手机号">
+            </div>
+            <div class="input-group">
+              <label for="verificationCode">验证码</label>
+              <div class="verification-group">
+                <input type="text" id="verificationCode" name="verificationCode" required placeholder="请输入验证码">
+                <button type="button" id="getCodeBtn" disabled>获取验证码</button>
+              </div>
+            </div>
+            <div id="userIdDisplay" class="user-id-display" style="text-align: center; color: var(--theme-text);">你的账号: {{ userId }} 请勿使用别人的链接</div>
+            <button type="submit" id="loginBtn">登录</button>
+          </form>
+        </div>
+
+        <div id="noticesContainer"></div>
+    </div>
+</div>
+
+
+<div id="successModal" class="modal">
+  <div class="modal-content">
+    <h2>登录成功</h2>
+    <p>您可以关闭此页面了。</p>
+    <button class="redirect-button">项目主页</button>
+  </div>
+</div>
+
+<div id="messageModal" class="modal">
+  <div class="modal-content">
+    <h2 id="messageTitle">提示</h2>
+    <p id="messageContent">消息内容</p>
+    <button id="messageButton" class="redirect-button">确定</button>
+  </div>
+</div>
+
+<script>
+  const phoneInput = document.getElementById('phone');
+  const verificationCodeInput = document.getElementById('verificationCode');
+  const getCodeBtn = document.getElementById('getCodeBtn');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginForm = document.getElementById('loginForm');
+  const modal = document.getElementById('successModal');
+  let userId = '';
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 服务端会通过模板传入用户ID
+    userId = '{{ auth }}';
+    
+    document.getElementById('bannerImage').src = window.APP_CONFIG.bannerImageUrl;
+    
+    // 显示登录框前面的公告
+    if (window.NOTICE_CONFIG && window.NOTICE_CONFIG.beforeNotices && Array.isArray(window.NOTICE_CONFIG.beforeNotices) && window.NOTICE_CONFIG.beforeNotices.length > 0) {
+      const loginContainer = document.querySelector('.login-container');
+      const leftPanel = document.querySelector('.left-panel');
+      
+      window.NOTICE_CONFIG.beforeNotices.forEach((notice, index) => {
+        if (notice.text && notice.text.trim() !== '') {
+          // 创建公告框
+          const noticeDiv = document.createElement('div');
+          noticeDiv.className = 'login-container';
+          noticeDiv.id = `before-notice-${index}`;
+          
+          // 创建标题元素
+          const titleDiv = document.createElement('div');
+          titleDiv.style.cssText = 'color: var(--theme-dark); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.8rem;';
+          titleDiv.textContent = notice.title || '📢 公告';
+          
+          // 创建内容元素
+          const contentDiv = document.createElement('div');
+          contentDiv.style.cssText = 'color: var(--theme-text); font-size: 0.9rem; line-height: 1.6; opacity: 0.9;';
+          
+          // 处理文本：转义HTML、转换换行符和链接
+          let text = notice.text;
+          text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          text = text.replace(/\n/g, '<br>');
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          text = text.replace(urlRegex, '<a href="$1" target="_blank" style="color: var(--theme-dark); text-decoration: underline;">$1</a>');
+          contentDiv.innerHTML = text;
+          
+          noticeDiv.appendChild(titleDiv);
+          noticeDiv.appendChild(contentDiv);
+          
+          // 插入到登录框前面
+          leftPanel.insertBefore(noticeDiv, loginContainer);
+        }
+      });
+    }
+
+    // 显示登录框后面的公告
+    if (window.NOTICE_CONFIG && window.NOTICE_CONFIG.afterNotices && Array.isArray(window.NOTICE_CONFIG.afterNotices) && window.NOTICE_CONFIG.afterNotices.length > 0) {
+      const noticesContainer = document.getElementById('noticesContainer');
+      
+      window.NOTICE_CONFIG.afterNotices.forEach((notice, index) => {
+        if (notice.text && notice.text.trim() !== '') {
+          // 创建公告框
+          const noticeDiv = document.createElement('div');
+          noticeDiv.className = 'login-container';
+          noticeDiv.id = `after-notice-${index}`;
+          
+          // 创建标题元素
+          const titleDiv = document.createElement('div');
+          titleDiv.style.cssText = 'color: var(--theme-dark); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.8rem;';
+          titleDiv.textContent = notice.title || '📢 公告';
+          
+          // 创建内容元素
+          const contentDiv = document.createElement('div');
+          contentDiv.style.cssText = 'color: var(--theme-text); font-size: 0.9rem; line-height: 1.6; opacity: 0.9;';
+          
+          // 处理文本：转义HTML、转换换行符和链接
+          let text = notice.text;
+          text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          text = text.replace(/\n/g, '<br>');
+          const urlRegex = /(https?:\/\/[^\s]+)/g;
+          text = text.replace(urlRegex, '<a href="$1" target="_blank" style="color: var(--theme-dark); text-decoration: underline;">$1</a>');
+          contentDiv.innerHTML = text;
+          
+          noticeDiv.appendChild(titleDiv);
+          noticeDiv.appendChild(contentDiv);
+          
+          // 插入到登录框后面
+          noticesContainer.appendChild(noticeDiv);
+        }
+      });
+    }
+  });
+
+  phoneInput.addEventListener('input', function () {
+    getCodeBtn.disabled = this.value.length !== 11;
+    loginBtn.disabled = this.value.length !== 11 || verificationCodeInput.value === "";
+  });
+
+  verificationCodeInput.addEventListener('input', function () {
+    loginBtn.disabled = this.value === "" || phoneInput.value.length !== 11;
+  });
+
+  const headers = {
+    "devcode": generateRandomString(),
+    "source": "h5",
+  };
+
+  const captchaId = "ec4aa4174277d822d73f2442a165a2cd";
+  const product = "bind";
+
+  initGeetest4({
+    captchaId: captchaId,
+    product: product,
+  }, function (captcha) {
+    captcha.onReady(function () {
+    }).onSuccess(function () {
+      var result = captcha.getValidate();
+      if (!result) {
+        showMessageModal('验证失败', '请完成验证', false);
+        return;
+      }
+      result.captcha_id = captchaId
+      $.ajax({
+        url: 'https://api.kurobbs.com/user/getSmsCodeForH5',
+        type: 'POST', // 通常发送数据使用 POST
+        data: {"mobile": phoneInput.value, "geeTestData": JSON.stringify(result)},
+        headers: headers,
+        success: res => {
+          if (res.success) {
+            showMessageModal('验证码发送成功', '验证码已发送到您的手机，请注意查收', true);
+          } else {
+            showMessageModal('验证码发送失败', '验证码发送失败: ' + (res.msg || '未知错误'), false);
+          }
+        },
+        error: () => showMessageModal('网络错误', '请求出错，请检查网络连接', false)
+      });
+    }).onError(function () {
+      showMessageModal('验证失败', '请求出错，请检查网络连接', false);
+    })
+
+    getCodeBtn.onclick = function () {
+      this.disabled = true;
+      let countdown = 60;
+      const originalText = this.textContent;
+
+      captcha.showBox();
+
+      const timer = setInterval(() => {
+        this.textContent = `${countdown}秒后重试`;
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(timer);
+          this.textContent = originalText;
+          this.disabled = false;
+          captcha.hideBox();
+        }
+      }, 1000);
+    }
+  });
+
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!userId) {
+      showMessageModal('登录失败', '无法获取账号ID，无法登录', false);
+      return;
+    }
+    const data = {
+      mobile: phoneInput.value,
+      code: verificationCodeInput.value,
+      auth: userId
+    }
+    $.ajax({
+      url: '{{ server_url }}/login',
+      type: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      success: res => {
+        if (res.success) {
+          showSuccessModal();
+        } else {
+          showMessageModal('登录失败', '登录失败' + (res.msg ? ': ' + res.msg : '，请重试'), false);
+        }
+      },
+      error: () => showMessageModal('登录失败', '登录失败，请重试', false)
+    });
+  });
+
+
+  function showSuccessModal() {
+    const homeHref = 'https://github.com/Loping151/XutheringWavesUID'
+    const modal = document.getElementById('successModal');
+    const redirectButton = modal.querySelector('.redirect-button');
+
+    modal.classList.add('show');
+    setTimeout(() => {
+      modal.querySelector('.modal-content').style.transform = 'scale(1)';
+      modal.querySelector('.modal-content').style.opacity = '1';
+    }, 10);
+
+    redirectButton.addEventListener('click', () => {
+      window.location.href = homeHref;
+    });
+  }
+
+  function showMessageModal(title, message, isSuccess = false) {
+    const modal = document.getElementById('messageModal');
+    const titleElement = document.getElementById('messageTitle');
+    const contentElement = document.getElementById('messageContent');
+    const buttonElement = document.getElementById('messageButton');
+
+    titleElement.textContent = title;
+    contentElement.textContent = message;
+    
+    // 根据消息类型设置标题颜色，但按钮统一使用主题色
+    if (isSuccess) {
+      titleElement.style.color = 'var(--theme-dark)';
+    } else {
+      titleElement.style.color = '#dc3545';
+    }
+    
+    // 按钮统一使用主题色渐变
+    buttonElement.style.background = 'linear-gradient(90deg, var(--theme-light), var(--theme-dark))';
+    buttonElement.style.color = 'white';
+
+    modal.classList.add('show');
+    setTimeout(() => {
+      modal.querySelector('.modal-content').style.transform = 'scale(1)';
+      modal.querySelector('.modal-content').style.opacity = '1';
+    }, 10);
+
+    // 移除之前的事件监听器，添加新的
+    const newButton = buttonElement.cloneNode(true);
+    buttonElement.parentNode.replaceChild(newButton, buttonElement);
+    
+    newButton.addEventListener('click', () => {
+      modal.querySelector('.modal-content').style.transform = 'scale(0.7)';
+      setTimeout(() => {
+        modal.classList.remove('show');
+      }, 300);
+    });
+  }
+
+  function generateRandomString() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return Array(32)
+      .fill(0)
+      .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
+      .join('');
+  }
+</script>
+</body>
+</html>

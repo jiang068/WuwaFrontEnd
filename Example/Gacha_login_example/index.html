@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>飞行雪绒 - 鸣潮抽卡记录查询工具</title>
+    <link rel="icon" href="https://web-static.kurobbs.com/resource/prod/icon.ico" type="image/x-icon" />
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        /* 在这里自定义主题色 */
+        :root {
+            --theme-light: #FFB6C1; /* 主题浅色 (淡粉) */
+            --theme-dark: #DB7093; /* 主题深色 (苍紫罗兰红) */
+            --theme-text: #6D435A; /* 主题文字颜色 (深粉灰) */
+            --theme-gold: #FFDAB9; /* 金色点缀 (桃杏色) */
+        }
+
+        /* 在这里自定义背景图片 */
+        .background-layer {
+            background-image: url(https://prod-alicdn-community.kurobbs.com/forum/ae40fc71bdc54074ac73b4187d02aebd20260206.jpg);
+        }
+    </style>
+    <script>
+        // 在这里自定义头像图片
+        window.APP_CONFIG = {
+            bannerImageUrl: 'https://i0.hdslb.com/bfs/face/3e0e929e4b3d6f32c553e4a7f52f975bd9a2d939.jpg@128w_128h_1c_1s.webp'
+        };
+
+        // 在这里自定义公告内容（如果不需要公告，将对应数组设为空 []）
+        window.NOTICE_CONFIG = {
+            beforeNotices: [
+                // 登录框前面的公告
+                {
+                    title: '📢 注意',
+                    text: '此处登录产生的登录凭证仅会保存在你本地浏览器的localStorage中，不会上传到任何服务器，请放心使用。\n下次登录时会继续使用之前的登录状态，直接点击“刷新记录”即可获取新的链接，除非你手动删除浏览器的localStorage数据或者更换浏览器。'
+                }
+            ],
+            afterNotices: [
+                // 登录框后面的公告
+                // {
+                //     title: '💡 提示',
+                //     text: '这是登录框后面的公告'
+                // }
+            ]
+        };
+    </script>
+</head>
+
+<body>
+    <div class="background-layer"></div>
+    <div class="background-overlay"></div>
+
+    <div class="main-container no-accounts">
+        <div class="left-panel">
+            <div id="loginContainer" class="login-container" style="display:block">
+                <div class="login-header">
+                    <div class="banner-text">
+                        <div class="welcome-text">飞行雪绒</div>
+                        <div class="logo-text">鸣潮抽卡记录获取工具</div>
+                        <div class="kurobbs-text">云鸣潮代理登录</div>
+                    </div>
+                    <div class="banner">
+                        <img id="bannerImage" src="" alt="Banner" />
+                    </div>
+                </div>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="phone">手机号</label> 
+                        <input type="tel" id="phone" name="phone" required pattern="[0-9]{11}" placeholder="请输入11位手机号" />
+                    </div>
+                    <div class="input-group">
+                        <label for="verificationCode">验证码</label>
+                        <div class="verification-group">
+                            <input id="verificationCode" name="verificationCode" required placeholder="请输入验证码" />
+                            <button type="button" id="getCodeBtn">获取</button>
+                        </div>
+                    </div>
+                    <button type="submit" id="loginBtn">登录</button>
+                </form>
+                <button id="backToAccountBtn" class="back-btn" style="display:none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg> 返回账号管理
+                </button>
+            </div>
+
+            <div id="accountManager" class="account-manager" style="display:none">
+                <div class="account-header">
+                    <h3>账号管理</h3>
+                    <button id="addAccountBtn" class="btn btn-orange btn-small">添加</button>
+                </div>
+                <div id="accountList" class="account-list"></div>
+            </div>
+
+            <div id="noticesContainer"></div>
+        </div>
+
+        <div class="right-panel">
+            <div id="recordContainer" class="record-container">
+                <div class="record-header">
+                    <h1>鸣潮抽卡记录</h1>
+                    <div class="action-buttons">
+                        <button id="refreshBtn" class="btn btn-primary">刷新记录</button> 
+                        <button id="copyBtn" class="btn btn-warning">复制记录</button>
+                    </div>
+                </div>
+                <div class="record-content">
+                    <div id="loadingIndicator" class="loading" style="display:none">
+                        <div class="loading-spinner"></div><span>正在获取抽卡记录...</span>
+                    </div>
+                    <div id="recordData" class="record-data" style="display:none">
+                        <div class="data-section account-info-section">
+                            <h3>当前账号信息</h3>
+                            <div class="data-item"><span class="data-label">账号:</span> <span id="currentAccount" class="data-value">-</span></div>
+                            <div class="data-item"><span class="data-label">玩家ID:</span> <span id="playerId" class="data-value">-</span></div>
+                            <div class="data-item"><span class="data-label">记录ID:</span> <span id="recordId" class="data-value">-</span></div>
+                        </div>
+                    </div>
+                    <div id="emptyState" class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <h3>暂无抽卡记录</h3>
+                        <p>请先登录账号，然后点击"刷新记录"按钮获取最新的抽卡记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('successModal').classList.remove('show')">&times;</span>
+            <h2>登录成功！</h2>
+            <p>您已成功登录鸣潮抽卡记录查询系统</p>
+            <div class="countdown"></div>
+        </div>
+    </div>
+
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="confirmDeleteTitle">确定删除？</h2>
+            <p id="confirmDeleteText">您确定要删除这个账号吗？此操作不可撤销。</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="btn btn-danger">确定</button>
+                <button id="cancelDeleteBtn" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://static.geetest.com/v4/gt4.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="module">
+        import { uuidv7 } from "https://unpkg.com/uuidv7@1.0.2/dist/index.js";
+        window.uuidv7 = uuidv7;
+    </script>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/ui_render.js"></script>
+    <script src="js/captcha_service.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/record_auth.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
